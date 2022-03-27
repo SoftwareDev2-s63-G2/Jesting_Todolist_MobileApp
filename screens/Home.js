@@ -1,19 +1,15 @@
-import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
-import DataService from '../services/service';
-import Header from "../components/Header";
-import Todolist from "../components/Todolist";
-import { useFocusEffect } from '@react-navigation/native';
+import React, {useState} from 'react';
+import {StyleSheet, View} from 'react-native';
+import Header from '../components/Header';
+import Todolist from '../components/Todolist';
 
 export default function Home() {
-  const [textInput, onChangeInput] = useState("");
-  
+  const [textInput, onChangeInput] = useState('');
+
   return (
-    <View style={styles.container}>
-      <Header
-        onChangeInput={onChangeInput}
-      />
-      <Todolist textInput={textInput}/>
+    <View testID="first_container" style={styles.container}>
+      <Header testID="header" onChangeInput={onChangeInput} />
+      <Todolist testID="list" textInput={textInput} />
     </View>
   );
 }
@@ -21,7 +17,7 @@ export default function Home() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#222831",
-    color: "#EEEEEE",
+    backgroundColor: '#222831',
+    color: '#EEEEEE',
   },
 });
