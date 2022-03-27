@@ -144,6 +144,7 @@ const Addtodo = (props) => {
               style={styles.input_title}
               placeholder="Enter title"
               onChangeText={(newtext) => setState({ ...state, title: newtext })}
+              testID="title_input"
             />
             <Text style={styles.label}>Alarm at:</Text>
             <View>
