@@ -10,7 +10,7 @@ import {
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
-  ScrollView,
+  ScrollView
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -19,7 +19,7 @@ import { faClock, faImage } from "@fortawesome/free-solid-svg-icons";
 import DataService from "../services/service";
 import * as RootNavigation from "../RootNavigation.js";
 
-const Addtodo = (props) => {
+const Addtodo = props => {
   const [state, setState] = useState({
     id: null,
     title: "",
@@ -27,7 +27,7 @@ const Addtodo = (props) => {
     finished: false,
     favor: false,
     rtime: "",
-    uri: "",
+    uri: ""
   });
   const [selectedImage, setSelectedImage] = useState(null);
   const [date, setDate] = useState(new Date());
@@ -65,7 +65,7 @@ const Addtodo = (props) => {
     }
   };
 
-  const showMode = (currentMode) => {
+  const showMode = currentMode => {
     setShow(true);
     setMode(currentMode);
   };
@@ -92,24 +92,24 @@ const Addtodo = (props) => {
       title: state.title,
       description: state.description,
       rtime: remind_time,
-      uri: selectedImage ? selectedImage.localUri : null,
+      uri: selectedImage ? selectedImage.localUri : null
     };
     if (data.title.length == 0) {
       alert("Title field is missing");
     } else {
       DataService.create(data)
-        .then((response) => {
+        .then(response => {
           setState({
             id: response.data.id,
             title: response.data.title,
             description: response.data.description,
             rtime: response.data.rtime,
-            uri: response.data.imageUri,
+            uri: response.data.imageUri
           });
           alert("Todo added");
           RootNavigation.navigate("Home");
         })
-        .catch((e) => {
+        .catch(e => {
           console.log(e);
         });
     }
@@ -120,9 +120,8 @@ const Addtodo = (props) => {
     if (time.getMinutes() < 10) {
       minute_str = "0" + time.getMinutes();
     }
-    let return_val = `${date.getDate()}/${
-      date.getMonth() + 1
-    }/${date.getFullYear()} ${time.getHours()}:${minute_str}`;
+    let return_val = `${date.getDate()}/${date.getMonth() +
+      1}/${date.getFullYear()} ${time.getHours()}:${minute_str}`;
 
     remind_time = return_val;
     return return_val;
@@ -143,12 +142,13 @@ const Addtodo = (props) => {
               placeholderTextColor={"#222831"}
               style={styles.input_title}
               placeholder="Enter title"
-              onChangeText={(newtext) => setState({ ...state, title: newtext })}
+              onChangeText={newtext => setState({ ...state, title: newtext })}
               testID="title_input"
+              value={state.title}
             />
             <Text style={styles.label}>Alarm at:</Text>
             <View>
-              <TouchableOpacity onPress={showDatepicker}>
+              <TouchableOpacity testID="dateTime_btn" onPress={showDatepicker}>
                 <Text style={styles.remind_time}>
                   {formatDate(date, time) + " "}
                   <FontAwesomeIcon size={26} color={"#00ADB5"} icon={faClock} />
@@ -168,11 +168,13 @@ const Addtodo = (props) => {
             )}
             <Text style={styles.label}>Description:</Text>
             <TextInput
+              testID="description_input"
+              value={state.description}
               multiline={true}
               placeholderTextColor={"#222831"}
               style={styles.input_desc}
               placeholder="Enter description"
-              onChangeText={(newtext) =>
+              onChangeText={newtext =>
                 setState({ ...state, description: newtext })
               }
             />
@@ -180,7 +182,10 @@ const Addtodo = (props) => {
             <View>
               {selectedImage !== null ? (
                 <View>
-                  <TouchableOpacity onPress={openImagePickerAsync}>
+                  <TouchableOpacity
+                    testID={"img_picked"}
+                    onPress={openImagePickerAsync}
+                  >
                     <Image
                       source={{ uri: selectedImage.localUri }}
                       style={styles.thumbnail}
@@ -191,7 +196,7 @@ const Addtodo = (props) => {
                       style={{
                         color: "#EEEEEE",
                         fontWeight: "bold",
-                        fontSize: 13,
+                        fontSize: 13
                       }}
                       onPress={() => {
                         setSelectedImage(null);
@@ -203,6 +208,7 @@ const Addtodo = (props) => {
                 </View>
               ) : (
                 <TouchableOpacity
+                  testID={"img_init"}
                   onPress={openImagePickerAsync}
                   style={styles.button}
                 >
@@ -213,7 +219,11 @@ const Addtodo = (props) => {
           </KeyboardAvoidingView>
         </View>
       </TouchableWithoutFeedback>
-      <TouchableOpacity style={styles.add_button} onPress={handler}>
+      <TouchableOpacity
+        testID={"submit"}
+        style={styles.add_button}
+        onPress={handler}
+      >
         <Text style={styles.button_text}>Submit</Text>
       </TouchableOpacity>
     </ScrollView>
@@ -226,7 +236,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     color: "#00ADB5",
     width: "100%",
-    fontSize: 20,
+    fontSize: 20
   },
   input_desc: {
     textAlignVertical: "top",
@@ -240,7 +250,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     borderRadius: 20,
     backgroundColor: "#EEEEEE",
-    padding: 10,
+    padding: 10
   },
   input_title: {
     marginTop: 10,
@@ -253,7 +263,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     borderRadius: 25,
     backgroundColor: "#EEEEEE",
-    padding: 10,
+    padding: 10
   },
   remind_time: {
     marginTop: 10,
@@ -264,7 +274,7 @@ const styles = StyleSheet.create({
     height: 40,
     width: "100%",
     fontSize: 28,
-    fontWeight: "bold",
+    fontWeight: "bold"
   },
   button: {
     marginTop: 55,
@@ -272,7 +282,7 @@ const styles = StyleSheet.create({
     marginLeft: "auto",
     marginRight: "auto",
     justifyContent: "center",
-    alignContent: "center",
+    alignContent: "center"
   },
   add_button: {
     backgroundColor: "#00ADB5",
@@ -282,19 +292,19 @@ const styles = StyleSheet.create({
     marginLeft: "auto",
     marginRight: "auto",
     justifyContent: "center",
-    alignContent: "center",
+    alignContent: "center"
   },
   button_text: {
     fontWeight: "bold",
     fontSize: 30,
     color: "#EEEEEE",
-    textAlign: "center",
+    textAlign: "center"
   },
   thumbnail: {
     margin: 10,
     width: 360,
     height: 150,
-    resizeMode: "contain",
+    resizeMode: "contain"
   },
   clear_img: {
     position: "absolute",
@@ -306,8 +316,8 @@ const styles = StyleSheet.create({
     height: 50,
     color: "#EEEEEE",
     backgroundColor: "red",
-    borderRadius: 25,
-  },
+    borderRadius: 25
+  }
 });
 
 export default Addtodo;

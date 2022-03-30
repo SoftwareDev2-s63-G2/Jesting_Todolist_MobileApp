@@ -1,8 +1,10 @@
 {
   "name": "todolistmobile",
-  "jest":{
-    "preset":"jest-expo",
-    "transformIgnorePatterns":["node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg|@fortawesome/fontawesome-svg-core|@fortawesome/free-solid-svg-icons|@fortawesome/react-native-fontawesome)"]
+  "jest": {
+    "preset": "jest-expo",
+    "transformIgnorePatterns": [
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg|@fortawesome/fontawesome-svg-core|@fortawesome/free-solid-svg-icons|@fortawesome/react-native-fontawesome)"
+    ]
   },
   "version": "1.0.0",
   "main": "node_modules/expo/AppEntry.js",
@@ -27,6 +29,7 @@
     "expo-checkbox": "~2.0.0",
     "expo-image-picker": "^12.0.2",
     "expo-status-bar": "~1.2.0",
+    "jest-dom": "^4.0.0",
     "jest-expo": "^44.0.1",
     "react": "17.0.1",
     "react-dom": "17.0.1",
