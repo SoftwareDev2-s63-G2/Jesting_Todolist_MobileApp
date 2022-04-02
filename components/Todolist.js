@@ -4,7 +4,7 @@ import {
   View,
   Text,
   FlatList,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 import TodoPopup from "./TodoPopup";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
@@ -13,7 +13,7 @@ import * as RootNavigation from "../RootNavigation.js";
 import DataService from "../services/service";
 import { useFocusEffect } from "@react-navigation/native";
 
-const Todolist = props => {
+const Todolist = (props) => {
   const textInput = props.textInput || "";
 
   const [DATA, onChangeDATA] = useState([]);
@@ -21,12 +21,12 @@ const Todolist = props => {
 
   const getAll = () => {
     DataService.getAll()
-      .then(response => {
+      .then((response) => {
         const data = response.data;
-        // console.log(data)
+        // console.log(data);
         const showedTodo = [];
         if (data !== [] && textInput !== "") {
-          data.forEach(value => {
+          data.forEach((value) => {
             if (value.title.toLowerCase().includes(textInput.toLowerCase())) {
               showedTodo.push(value);
             }
@@ -36,7 +36,7 @@ const Todolist = props => {
           onChangeDATA(data);
         }
       })
-      .catch(e => {
+      .catch((e) => {
         console.log(e);
       });
   };
@@ -67,15 +67,14 @@ const Todolist = props => {
       finished: todo.finished,
       favor: status,
       rtime: todo.rtime,
-      uri: todo.uri
+      uri: todo.uri,
     };
-
     DataService.update(todo.id, data)
-      .then(response => {
+      .then((response) => {
         getAll();
         // console.log(response.data);
       })
-      .catch(e => {
+      .catch((e) => {
         console.log(e);
       });
   };
@@ -102,7 +101,7 @@ const Todolist = props => {
     </TouchableOpacity>
   );
 
-  const onClick = item => {
+  const onClick = (item) => {
     setSelectedId(item.id);
     setVisible(true);
     setTodo(item);
@@ -127,7 +126,7 @@ const Todolist = props => {
           <FlatList
             data={DATA}
             renderItem={renderItem}
-            keyExtractor={item => item.id}
+            keyExtractor={(item) => item.id}
             extraData={selectedId}
             testID="list"
           />
@@ -155,7 +154,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     justifyContent: "center",
-    height: "100%"
+    height: "100%",
   },
   item: {
     flexDirection: "row",
@@ -169,23 +168,23 @@ const styles = StyleSheet.create({
     height: 65,
     borderRadius: 65 / 2,
     backgroundColor: "#00ADB57D",
-    color: "#EEEEEE"
+    color: "#EEEEEE",
   },
   title: {
     color: "#EEEEEE",
-    fontSize: 24
+    fontSize: 24,
   },
   no_res: {
     textAlignVertical: "top",
     color: "#00ADB5",
     fontSize: 18,
-    alignSelf: "center"
+    alignSelf: "center",
   },
   star: {
     marginLeft: "75%",
     position: "absolute",
-    right: 0
-  }
+    right: 0,
+  },
 });
 
 export default Todolist;
