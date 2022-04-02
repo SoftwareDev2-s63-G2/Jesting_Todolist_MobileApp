@@ -6,7 +6,7 @@ import {
   act,
   cleanup,
 } from "@testing-library/react-native";
-import { View } from "react-native";
+import { View, Alert } from "react-native";
 import App from "../App";
 import Todolist from "../components/Todolist";
 import Addtodo from "../components/Addtodo";
@@ -15,10 +15,6 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { NavigationContext } from "@react-navigation/native";
 import DataService from "../services/service";
 jest.mock("react-native/Libraries/Animated/NativeAnimatedHelper");
-// jest.mock("@react-native-community/datetimepicker", function () {
-//   const mockComponent = require("react-native/jest/mockComponent");
-//   return mockComponent("@react-native-community/datetimepicker");
-// });
 jest.mock("@react-native-community/datetimepicker", () => {
   const React = require("react");
   const RealComponent = jest.requireActual(
@@ -65,12 +61,20 @@ const MockResponse = {
     },
   ],
 };
+const deletedMessage = { message: "Todo was deleted successfully!" };
+const spyAlert = jest.spyOn(Alert, "alert");
 const getAllService = jest.spyOn(DataService, "getAll");
 const updateService = jest.spyOn(DataService, "update");
+const createService = jest.spyOn(DataService, "create");
+const deleteService = jest.spyOn(DataService, "delete");
 beforeEach(() => {
   getAllService.mockResolvedValue(MockResponse);
+  deleteService.mockResolvedValue(deletedMessage);
 });
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  jest.clearAllMocks();
+});
 ///////////////////////////////////////////////////////////////////////////////////////////
 describe("Observing Todolist", () => {
   it("Display Todo", async () => {
@@ -162,13 +166,44 @@ describe("Adding Todo", () => {
         hour12: false,
       })
       .replace(",", "");
+    //change Date
     fireEvent(Timepicker, "onChange", null, date);
-
-    await AddForm.findByText(MockedDate);
+    //change Time
+    fireEvent(Timepicker, "onChange", null, date);
+    expect(await AddForm.findByText(MockedDate)).toBeTruthy();
+    //wait for image test
+    const submit_btn = await AddForm.findByTestId("submit");
+    fireEvent.press(submit_btn);
+    expect(createService).toBeCalledWith(
+      expect.objectContaining({
+        title: "Jest Test",
+        description: "Testing Adding form by insert text.",
+        rtime: MockedDate,
+        uri: null,
+      })
+    );
   });
 });
 ///////////////////////////////////////////////////////////////////////////////////////////
-
+describe("Deleting Todo", () => {
+  it("Delete Todo via TodoPopip", async () => {
+    const TodoComp = render(
+      <NavigationContext.Provider value={navContext}>
+        <Todolist />
+      </NavigationContext.Provider>
+    );
+    const item = await TodoComp.findByTestId("item3"); // can get data
+    fireEvent.press(item);
+    expect(await TodoComp.findByTestId("Modal-popup-title")).toBeDefined();
+    const deleteButton = TodoComp.getByTestId("delete_btn"); // testID='delete_btn' at >faTrash< icon.
+    fireEvent.press(deleteButton);
+    await spyAlert.mock.calls[0][2][1].onPress();
+    expect(deleteService).toHaveBeenCalledTimes(1);
+    expect(deleteService).toBeCalledWith(MockResponse.data[0].id);
+    expect(getAllService).toHaveBeenCalledTimes(2); // first call at app start (when Todolist is created) , second call at after delete
+  });
+});
+///////////////////////////////////////////////////////////////////////////////////////////
 describe("Update favorite Todo", () => {
   it("Press on star Icon", async () => {
     const TodoComp = render(

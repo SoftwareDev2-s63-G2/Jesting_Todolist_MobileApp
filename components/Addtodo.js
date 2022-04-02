@@ -66,7 +66,7 @@ const Addtodo = (props) => {
   };
 
   const showMode = (currentMode) => {
-    console.log("show date");
+    // console.log("show date");
     setShow(true);
     setMode(currentMode);
   };
@@ -126,7 +126,7 @@ const Addtodo = (props) => {
     }/${date.getFullYear()} ${time.getHours()}:${minute_str}`;
 
     remind_time = return_val;
-    console.log("time" + return_val);
+    // console.log("time" + return_val);
     return return_val;
   };
 
@@ -186,10 +186,11 @@ const Addtodo = (props) => {
               {selectedImage !== null ? (
                 <View>
                   <TouchableOpacity
-                    testID={"img_picked"}
+                    testID="img_picked"
                     onPress={openImagePickerAsync}
                   >
                     <Image
+                      testID="prv_img"
                       source={{ uri: selectedImage.localUri }}
                       style={styles.thumbnail}
                     />
@@ -211,7 +212,7 @@ const Addtodo = (props) => {
                 </View>
               ) : (
                 <TouchableOpacity
-                  testID={"img_init"}
+                  testID="img_init"
                   onPress={openImagePickerAsync}
                   style={styles.button}
                 >
@@ -223,7 +224,7 @@ const Addtodo = (props) => {
         </View>
       </TouchableWithoutFeedback>
       <TouchableOpacity
-        testID={"submit"}
+        testID="submit"
         style={styles.add_button}
         onPress={handler}
       >

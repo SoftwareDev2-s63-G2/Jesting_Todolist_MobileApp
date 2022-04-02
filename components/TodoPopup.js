@@ -7,18 +7,18 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
-  Alert
+  Alert,
 } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
   faXmarkCircle,
   faGear,
-  faTrash
+  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import * as RootNavigation from "../RootNavigation.js";
 import DataService from "../services/service";
 
-const TodoPopup = props => {
+const TodoPopup = (props) => {
   const visible = props.visible;
   const todo = props.todo;
 
@@ -29,11 +29,11 @@ const TodoPopup = props => {
 
   const getAll = () => {
     DataService.getAll()
-      .then(response => {
+      .then((response) => {
         const data = response.data;
         const showedTodo = [];
         if (data !== [] && props.textInput !== "") {
-          data.forEach(value => {
+          data.forEach((value) => {
             if (
               value.title.toLowerCase().includes(props.textInput.toLowerCase())
             ) {
@@ -45,12 +45,12 @@ const TodoPopup = props => {
           props.onChangeDATA(data);
         }
       })
-      .catch(e => {
+      .catch((e) => {
         console.log(e);
       });
   };
 
-  const deleteHandler = todo => {
+  const deleteHandler = (todo) => {
     Alert.alert(
       "Are you sure to delete this?",
       "You won't be able to revert this!",
@@ -58,22 +58,22 @@ const TodoPopup = props => {
         {
           text: "Cancel",
           // onPress: () => console.log("Cancel Pressed"),
-          style: "cancel"
+          style: "cancel",
         },
         {
           text: "ํYes, Delete it",
           onPress: () => {
             // console.log("OK Pressed");
             DataService.delete(todo.id)
-              .then(response => {
+              .then((response) => {
                 props.setVisible(false);
                 getAll();
               })
-              .catch(e => {
+              .catch((e) => {
                 console.log(e);
               });
-          }
-        }
+          },
+        },
       ]
     );
   };
@@ -135,6 +135,7 @@ const TodoPopup = props => {
                     size={30}
                     color={"#EEEEEE"}
                     icon={faTrash}
+                    testID="delete_btn"
                     onPress={() => {
                       deleteHandler(todo);
                     }}
@@ -168,20 +169,20 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     margin: 80,
     borderRadius: 30,
-    padding: 16
+    padding: 16,
   },
   title: {
     fontSize: 28,
     fontWeight: "bold",
     textAlign: "center",
     color: "#EEEEEE",
-    marginBottom: 8
+    marginBottom: 8,
   },
   info: {
     fontSize: 22,
     textAlign: "left",
     color: "#EEEEEE",
-    marginVertical: 8
+    marginVertical: 8,
   },
   thumbnail: {
     marginTop: 20,
@@ -189,8 +190,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     width: 360,
     height: 150,
-    resizeMode: "contain"
-  }
+    resizeMode: "contain",
+  },
 });
 
 export default TodoPopup;
