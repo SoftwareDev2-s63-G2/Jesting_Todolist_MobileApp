@@ -143,6 +143,7 @@ const TodoPopup = (props) => {
                 </TouchableOpacity>
                 <TouchableOpacity>
                   <FontAwesomeIcon
+                    testID="Edit_btn"
                     size={30}
                     color={"#EEEEEE"}
                     icon={faGear}

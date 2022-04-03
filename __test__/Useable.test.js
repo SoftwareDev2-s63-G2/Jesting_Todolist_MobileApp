@@ -14,6 +14,7 @@ import * as ImagePicker from "expo-image-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { NavigationContext } from "@react-navigation/native";
 import DataService from "../services/service";
+
 jest.mock("react-native/Libraries/Animated/NativeAnimatedHelper");
 jest.mock("@react-native-community/datetimepicker", () => {
   const React = require("react");
@@ -75,6 +76,7 @@ afterEach(() => {
   cleanup();
   jest.clearAllMocks();
 });
+jest.useFakeTimers();
 ///////////////////////////////////////////////////////////////////////////////////////////
 describe("Observing Todolist", () => {
   it("Display Todo", async () => {
@@ -83,10 +85,8 @@ describe("Observing Todolist", () => {
         <Todolist />
       </NavigationContext.Provider>
     );
-    let testComp;
     await TodoComp.findByTestId("list").then((e) => {
       expect(e.props.data).toEqual(MockResponse.data);
-      testComp = e;
     });
   });
   it("Testing Modal popup", async () => {
@@ -130,7 +130,6 @@ describe("Searching Todo", () => {
 ///////////////////////////////////////////////////////////////////////////////////////////
 describe("Adding Todo", () => {
   it("navigate to Adding page", async () => {
-    jest.useFakeTimers();
     const component = render(<App />);
     const { getByTestId, findByText } = component;
     const add_btn = getByTestId("add_btn"); // Screen Header Todolist Add Button
@@ -139,7 +138,6 @@ describe("Adding Todo", () => {
     expect(newScreen).toBeTruthy();
   });
   it("Fill Adding Form", async () => {
-    jest.useFakeTimers();
     const AddForm = render(
       <NavigationContext.Provider value={navContext}>
         <Addtodo />
@@ -179,6 +177,87 @@ describe("Adding Todo", () => {
         title: "Jest Test",
         description: "Testing Adding form by insert text.",
         rtime: MockedDate,
+        uri: null,
+      })
+    );
+  });
+});
+///////////////////////////////////////////////////////////////////////////////////////////
+describe("Editing todo", () => {
+  it("Edit page", async () => {
+    //Todo : navigate to edit page
+    const component = render(<App />);
+    const { getByTestId, findByText, findByTestId } = component;
+    const item = await findByTestId("item4");
+    fireEvent.press(item);
+    edit_btn = getByTestId("Edit_btn");
+    expect(edit_btn).toBeDefined();
+    fireEvent.press(edit_btn);
+    edit_page = await findByText("Edit todo");
+    expect(edit_page).toBeTruthy();
+
+    //Todo : show correct data
+    const test_data = 1;
+    const title_val = getByTestId("title_input").props.value;
+    expect(title_val).toEqual(MockResponse.data[test_data].title);
+    const desc_val = getByTestId("description_input").props.value;
+    expect(desc_val).toEqual(MockResponse.data[test_data].description);
+    let rtime_val = getByTestId("rtime").props.children[0];
+    rtime_val = rtime_val.slice(0, rtime_val.length - 1);
+    expect(rtime_val).toEqual(MockResponse.data[test_data].rtime);
+    const status = getByTestId("status").props.children == "Yes" ? true : false;
+    expect(status).toEqual(MockResponse.data[test_data].finished);
+    const favor = getByTestId("favor").props.children == "Yes" ? true : false;
+    expect(favor).toEqual(MockResponse.data[test_data].favor);
+    const uri = getByTestId("image_container").props.value;
+    expect(uri).toEqual(MockResponse.data[test_data].uri);
+
+    //Todo : edit data
+    const title_inp = getByTestId("title_input");
+    const desc_inp = getByTestId("description_input");
+    const rtime_btn = getByTestId("dateTime_btn");
+    fireEvent.changeText(title_inp, "Do Homework");
+    expect(title_inp.props.value).toEqual("Do Homework");
+    fireEvent.changeText(desc_inp, "At home");
+    expect(desc_inp.props.value).toEqual("At home");
+    const status_cb = getByTestId("status_cb");
+    fireEvent.press(status_cb);
+    expect(status_cb.props.accessibilityState.checked).toEqual(
+      !MockResponse.data[test_data].finished
+    );
+    const favor_cb = getByTestId("favor_cb");
+    fireEvent.press(favor_cb);
+    expect(favor_cb.props.accessibilityState.checked).toEqual(
+      !MockResponse.data[test_data].favor
+    );
+
+    fireEvent.press(rtime_btn);
+    const Timepicker = await findByTestId("dateTimePicker");
+    const date = new Date(156e10);
+    const MockedDate = date
+      .toLocaleString("el-GR", {
+        day: "numeric",
+        year: "numeric",
+        month: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        hour12: false,
+      })
+      .replace(",", "");
+    fireEvent(Timepicker, "onChange", null, date); //date
+    fireEvent(Timepicker, "onChange", null, date); //time
+
+    //Todo : update when submitted
+    const submit_btn = getByTestId("submit_btn");
+    fireEvent.press(submit_btn);
+    expect(updateService).toBeCalledWith(
+      4,
+      expect.objectContaining({
+        description: "At home",
+        favor: !MockResponse.data[test_data].favor,
+        finished: !MockResponse.data[test_data].finished,
+        rtime: MockedDate,
+        title: "Do Homework",
         uri: null,
       })
     );

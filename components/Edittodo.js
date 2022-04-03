@@ -22,7 +22,6 @@ import { faClock, faImage } from "@fortawesome/free-solid-svg-icons";
 import * as RootNavigation from "../RootNavigation.js";
 
 const Edittodo = (props) => {
-  // console.log(RootNavigation.navigationRef.getCurrentRoute().params.favor);
   const parameters = RootNavigation.navigationRef.getCurrentRoute().params;
   const [state, setState] = useState({
     id: parameters.id,
@@ -158,6 +157,7 @@ const Edittodo = (props) => {
           <KeyboardAvoidingView>
             <Text style={styles.label}>Title:</Text>
             <TextInput
+              testID="title_input"
               multiline={true}
               placeholderTextColor={"#222831"}
               style={styles.input_title}
@@ -167,8 +167,8 @@ const Edittodo = (props) => {
             />
             <Text style={styles.label}>Alarm at:</Text>
             <View>
-              <TouchableOpacity onPress={showDatepicker}>
-                <Text style={styles.remind_time}>
+              <TouchableOpacity testID="dateTime_btn" onPress={showDatepicker}>
+                <Text style={styles.remind_time} testID="rtime">
                   {selectedTiming !== null
                     ? formatDate(date, time)
                     : state.rtime + " "}
@@ -190,6 +190,7 @@ const Edittodo = (props) => {
             )}
             <Text style={styles.label}>Description:</Text>
             <TextInput
+              testID="description_input"
               multiline={true}
               placeholderTextColor={"#222831"}
               style={styles.input_desc}
@@ -206,6 +207,7 @@ const Edittodo = (props) => {
                 Finish:{"\t"}
                 {"\t"}
                 <CheckBox
+                  testID="status_cb"
                   value={state.finished}
                   onValueChange={() =>
                     setState({ ...state, finished: !state.finished })
@@ -214,6 +216,7 @@ const Edittodo = (props) => {
               </Text>
 
               <Text
+                testID="status"
                 style={{
                   color: "#00ADB5",
                   width: "100%",
@@ -234,6 +237,7 @@ const Edittodo = (props) => {
                 Favourite:{"\t"}
                 {"\t"}
                 <CheckBox
+                  testID="favor_cb"
                   value={state.favor}
                   onValueChange={() =>
                     setState({ ...state, favor: !state.favor })
@@ -241,6 +245,7 @@ const Edittodo = (props) => {
                 />
               </Text>
               <Text
+                testID="favor"
                 style={{
                   color: "#00ADB5",
                   width: "100%",
@@ -255,7 +260,7 @@ const Edittodo = (props) => {
             </View>
 
             <Text style={styles.label}>Upload image:</Text>
-            <View>
+            <View testID="image_container" value={state.uri}>
               {state.uri !== null ? (
                 <View>
                   <TouchableOpacity onPress={openImagePickerAsync}>
@@ -292,7 +297,11 @@ const Edittodo = (props) => {
           </KeyboardAvoidingView>
         </View>
       </TouchableWithoutFeedback>
-      <TouchableOpacity style={styles.add_button} onPress={handler}>
+      <TouchableOpacity
+        testID="submit_btn"
+        style={styles.add_button}
+        onPress={handler}
+      >
         <Text style={styles.button_text}>Submit</Text>
       </TouchableOpacity>
     </ScrollView>
