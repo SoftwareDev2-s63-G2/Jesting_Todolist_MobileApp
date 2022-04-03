@@ -183,7 +183,7 @@ describe("Adding Todo", () => {
   });
 });
 ///////////////////////////////////////////////////////////////////////////////////////////
-describe("Editing todo", () => {
+describe("Editing Todo", () => {
   it("Edit page", async () => {
     //Todo : navigate to edit page
     const component = render(<App />);
